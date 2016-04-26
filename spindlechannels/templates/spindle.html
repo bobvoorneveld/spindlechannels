@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Estrada</title>
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+
+    <div class="header">
+      <div class="header-container">
+        <a href="http://www.wearespindle.com" target="_blank">
+          <img class="logo" src="/static/images/spindle.svg" alt="Spindle"/>
+          <div class="logo-subtitle">devhouse</div>
+        </a>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+    <div class="content-container">
+      <h1>Congratulations!</h1>
+      <p>You've successfully built the docker container and are now embarking on
+        a journey of awesomeness. With this template we hope to give you a good
+        start in your new epic project. If you find bugs, have improvements or
+        questions, please sent them to <a href="mailto:marco@wearespindle.com">marco@wearespindle.com</a>
+        and we&#39;ll get back to you asap. We love to see the projects that you
+        created with the Epic Spindle Template for Really Awesome Django Apps,
+        mention us on Twitter (<a href="https://twitter.com/wearespindle" target="_blank">@wearespindle</a>)
+        or Github (<a href="https://github.com/wearespindle" target="_blank">@wearespindle</a>) if you
+        want to show off :wink:. Happy coding!
+      </p>
+
+      <h2>Who are we?</h2>
+      <p>Spindle is a devhouse, basically a <a href="https://wearespindle.com/about-us/" target="_blank">shack full of techies</a>.
+        If we aren&#39;t beating each others high scores, we build trailblazing technology for
+        business communication.
+      </p>
+
+      <h2>Getting started</h2>
+      <p>For now, just as a reminder, here are some command&#39;s to work with:</p>
+
+      <div class="instructions">
+        <p>To rebuild the docker containers (in case of new requirements for example):</p>
+        <span class="terminal-command">docker-compose build</span>
+
+        <p>To run all docker containers:</p>
+        <span class="terminal-command">docker-compose up</span>
+
+        <p>To run the web container but with dependencies pushed to the background:</p>
+        <span class="terminal-command">docker-compose run --service-ports web</span>
+
+        <p>To run django migrations:</p>
+        <span class="terminal-command">docker-compose run web python manage.py makemigrations</span>
+        <span class="terminal-command">docker-compose run web python manage.py migrate</span>
+
+        <p>Now for the cool stuff, your stuff. To create your own app you have to run:</p>
+        <span class="terminal-command">docker-compose run web django-admin startapp spindlechannels.your_app_name</span>
+
+        <p>And add your new app to installed_apps in `spindlechannels/settings/base.py`.</p>
+      </div>
+
+      <h2>Remove this example filth</h2>
+      <p>If you want to get rid of the Spindle page delete the following files/lines:</p>
+      <span class="code-editor">
+        file: spindlechannels/templates/spindle.html</br>
+        file: spindlechannels/static/css/style.css</br>
+        file: spindlechannels/static/images/spindle.svg</br>
+        line: spindlechannels/urls.py:5 "from django.views.generic.base import TemplateView"</br>
+        line: spindlechannels/urls.py:9 "url(r'^$', TemplateView.as_view(template_name='spindle.html'), name='spindle'),"
+      </span>
+
+      <p>And while we are at it delete the example app structure as well by deleting
+        the following directories:
+      </p>
+
+      <span class="code-editor">
+        spindlechannels/app1</br>
+        spindlechannels/app2
+      </span>
+
+    </div>
+<script>
+    // Note that the path doesn't matter for routing; any WebSocket
+    // connection gets bumped over to WebSocket consumers
+    socket = new WebSocket("ws://dockerhost:8005/chat/");
+    socket.onmessage = function(e) {
+        alert(e.data);
+    };
+    socket.onopen = function() {
+        console.log('testing');
+        socket.send("hello world");
+    };
+</script>
+  </body>
+</html>

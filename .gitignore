@@ -1,0 +1,16 @@
+__pycache__/
+
+*.db
+*.py[cod]
+*.so
+*.sqlite
+
+.DS_Store
+.env
+.idea/
+.project
+.pydevproject
+.ropeproject/
+.settings/
+
+dist-packages/

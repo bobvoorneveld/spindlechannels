@@ -1,0 +1,102 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
+@import url(http://fonts.googleapis.com/css?family=Nixie+One);
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #2E3547;
+}
+
+h1 {
+  font-size: 45px;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 21px;
+  font-weight: 400;
+  color: #f2cc10;
+}
+
+h4 {
+  font-size: 17px;
+  letter-spacing: 0.4px;
+  color: #f2cc10;
+}
+
+.content-container a {
+  color: white;
+  border-bottom: 2px #f2cc10 solid;
+  text-decoration: none;
+  padding-bottom: 2px;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  background: #2E3547;
+  width: 100%;
+  padding: 25px 0;
+}
+
+.header-container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+.logo {
+  float: left;
+  height: 50px;
+  margin-right: 15px;
+}
+
+.logo-subtitle {
+  line-height: 50px;
+  font-size: 21px;
+  font-family: 'Nixie One', cursive;
+  color: white;
+  float: left;
+}
+
+.content-container {
+  max-width: 980px;
+  margin: 100px auto;
+  color: white;
+}
+
+.content-container {
+  font-size: 17px;
+  letter-spacing: 0.4px;
+}
+
+.content-container p {
+  -webkit-font-smoothing: antialiased;
+  line-height: 190%;
+}
+
+.instructions p {
+  line-height: 15px;
+}
+
+.code-editor,
+.terminal-command {
+  box-sizing: border-box;
+  display: block;
+  margin: 5px 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  line-height: 1.7em;
+  border: 1px rgba(255,255,255,0.1) solid;
+  border-left: 5px rgba(255,255,255,0.1) solid;
+  padding: 10px;
+}
+
+.terminal-command:before {
+  content: "$";
+  color: #f2cc10;
+  margin-right: 5px;
+}
+
+.clearfix {
+  clear: both;
+}

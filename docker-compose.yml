@@ -1,0 +1,32 @@
+db:
+  build: Dockers/db
+  ports:
+    # ext:int port.
+    - "5435:5432"
+redis:
+  image: redis:2.8
+  ports:
+    # ext:int port.
+    - 6373:6379
+web:
+  build: .
+  command: python manage.py runserver 0:8000
+  volumes:
+    - .:/home/docker/spindlechannels
+  ports:
+    # ext:int port.
+    - "8005:8000"
+  links:
+    # Define all containers for easy running of development setup.
+    - db
+    - redis
+worker:
+  build: .
+  command: python manage.py runworker
+  volumes:
+    - .:/home/docker/spindlechannels
+  links:
+    # Define all containers for easy running of development setup.
+    - db
+    - redis
+
