@@ -2,13 +2,20 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic.base import TemplateView
+from django.contrib.auth.views import login, logout
+from django.core.urlresolvers import reverse_lazy
 
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('spindlechannels.chat.urls')),
-    url(r'^$', TemplateView.as_view(template_name='spindle.html'), name='spindle'),
+    url(r'^login/$', login, name='my_login'),
+    url(r'^', include('map.urls')),
+    url(
+        r'^logout/$',
+        logout,
+        {'next_page': reverse_lazy('home')},
+        name='logout'
+    ),
 ]
 
 if settings.DEBUG and settings.MEDIA_ROOT:

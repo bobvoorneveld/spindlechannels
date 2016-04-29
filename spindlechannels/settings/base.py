@@ -46,10 +46,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 
     # Project apps
-    'spindlechannels.chat',
-    'channels'
+    # 'chat',
+    # 'world',
+    # 'tracker',
+    'map',
+    'channels',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -144,6 +148,8 @@ CHANNEL_LAYERS = {
     },
 }
 
+GOOGLEMAPS_API_KEY = os.environ.get('GOOGLEMAPS_API_KEY', '')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -166,7 +172,7 @@ LOGGING = {
             'class': 'logging.NullHandler',
         },
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
@@ -186,12 +192,12 @@ LOGGING = {
         },
         'django.request': {
             'handlers': ['mail_admins'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
         },
         '': {
             'handlers': ['console', ],
-            'level': 'INFO',
+            'level': 'DEBUG',
         }
     }
 }

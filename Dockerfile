@@ -7,7 +7,10 @@ RUN apt-get install -y \
     python2.7-dev \
     python-pip \
     postgresql \
-    postgresql-server-dev-9.3
+    postgresql-server-dev-9.3 \
+    binutils \
+    libproj-dev \
+    gdal-bin
 
 RUN useradd docker
 RUN echo "ALL ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -24,6 +27,6 @@ RUN chown -R docker:docker $HOME/
 USER docker
 
 ENV DEBUG 1
-ENV DATABASE_URL postgres://spindlechannels:@db/spindlechannels
+ENV DATABASE_URL postgis://spindlechannels:@db/spindlechannels
 
 WORKDIR /home/docker/spindlechannels

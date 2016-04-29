@@ -1,6 +1,6 @@
 from channels.staticfiles import StaticFilesConsumer
 
-from spindlechannels.chat import consumers
+from map import consumers
 
 channel_routing = {
     # This makes Django serve static files from settings.STATIC_URL, similar
@@ -9,6 +9,7 @@ channel_routing = {
     'http.request': StaticFilesConsumer(),
 
     'websocket.connect': consumers.ws_connect,
+    "websocket.keepalive": consumers.websocket_keepalive,
     'websocket.receive': consumers.ws_receive,
     'websocket.disconnect': consumers.ws_disconnect,
 }
