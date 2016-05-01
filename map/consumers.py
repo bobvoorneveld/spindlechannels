@@ -13,6 +13,17 @@ logger = logging.getLogger(__name__)
 @channel_session_user_from_http
 def ws_connect(message):
     logger.info('websocket_connect. message = %s', message)
+
+    # Sent all existing markers to the client
+    for marker in Marker.objects.all():
+        message.reply_channel.send({
+            'text':
+                json.dumps({
+                    'type': 'post_save',
+                    'created': False,
+                    'feature': marker.geojson_feature
+                })
+        })
     # Load every connection into one group.
     Group('notifications').add(message.reply_channel)
 
