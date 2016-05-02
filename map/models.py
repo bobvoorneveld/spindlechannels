@@ -13,7 +13,7 @@ class Marker(models.Model):
     def geojson_feature(self):
         return Feature(
             geometry=json.loads(self.location.geojson),
-            id='Incident:{pk}'.format(pk=self.pk),
+            id=self.pk,
             properties={
                 # 'name': '',
                 'created': str(self.created),
