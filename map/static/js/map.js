@@ -99,6 +99,8 @@ $(function() {
                 sendLocation(marker.getPosition(), marker.id);
             });
         }
+
+        updateBounds();
     }
 
     /**
@@ -132,5 +134,14 @@ $(function() {
      */
     function sendLocation(latLng, markerId) {
         socket.send(JSON.stringify(fromLatLng(latLng, markerId)));
+    }
+
+    function updateBounds() {
+        // Update bounds of map to fit all markers
+        var bounds = new google.maps.LatLngBounds();
+        for (var i in markers) {
+            bounds.extend(markers[i].getPosition());
+        }
+        map.fitBounds(bounds);
     }
 });
