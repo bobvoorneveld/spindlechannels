@@ -16,5 +16,5 @@ Copy .env.example to .env and add your Google maps key
 
 Visit the site at localhost:8005 or your dockerhost_ip:8005
 
-A presentation explaning Django Channels using this project as a demo
+A presentation explaining Django Channels using this project as a demo
 [lives here](http://bobvoorneveld.github.io/spindlechannels/#/).
