@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Django Channels</title>
+
+		<meta name="description" content="Django Channels">
+		<meta name="author" content="Bram Noordzij">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/fullscreen-img.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Django Channels</h1>
+					<h3>Realtime this time</h3>
+					<p>
+						<small>by Bram Noordzij / <a href="http://twitter.com/randombits">@random_bits</a>, Bob Voorneveld / <a href="http://twitter.com/randombits">@BobVoorneveld</a></small>
+					</p>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						...a project to make Django able to handle more than just plain HTTP requests,
+						including WebSockets and HTTP2, as well as the ability to run code after a 
+						response has been sent for things like thumbnailing or background calculation.
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						... an easy-to-understand extension of the Django view model, and easy to integrate and deploy.
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						...an ordered, first-in first-out queue with message expiry and at-most-once delivery to only one listener at a time.
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						- Available as library for Django 1.8 and 1.9
+						- Included in Django 1.10
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						```
+						INSTALLED_APPS = (
+ 						   ...
+						   'map',  # Our demo app
+						   'channels',
+						)
+						```
+				    </script>
+				</section>
+
+				<section fullscreen-img="assets/django-asgi-websockets.png" fullscreen-size="contain">
+				</section>
+
+				<section fullscreen-img="assets/django-wsgi.png" fullscreen-size="contain">
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						## Channel Backend
+						- In memory (single host)
+						- Redis
+						- Database
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+					## Run worker service
+					```
+					$ python manage.py runworker
+					$ daphne my_project.asgi:channel_layer
+					```
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+					## DEMO
+					<a href="https://github.com/bobvoorneveld/spindlechannels">https://github.com/bobvoorneveld/spindlechannels</a>,
+				    </script>
+				</section>
+
+				<section>
+					<pre><code class="python" data-trim data-noescape>
+# routing.py
+from map import consumers
+
+channel_routing = {
+
+    'websocket.connect': consumers.ws_connect,
+    "websocket.keepalive": consumers.websocket_keepalive,
+    'websocket.receive': consumers.ws_receive,
+    'websocket.disconnect': consumers.ws_disconnect,
+				    </code></pre>
+				</section>
+
+				<section>
+					<pre><code class="python" data-trim data-noescape>
+# consumers.py
+from channels import Group
+from channels.auth import channel_session_user_from_http
+from channels.auth import channel_session_user
+
+@channel_session_user_from_http
+# adds session user to the message
+def ws_connect(message):
+	for marker in Marker.objects.all():
+		message.reply_channel.send({'text': json.dumps({marker_info...
+	Group('notifications').add(message.reply_channel)
+				    </code></pre>
+				</section>
+
+				<section>
+					<pre><code data-trim data-noescape>
+@channel_session_user
+def websocket_keepalive(message):
+    logger.info('websocket_keepalive. message = %s', message)
+    # Load every connection into one group.
+    Group('notifications').add(message.reply_channel)
+				    </code></pre>
+				</section>
+
+				<section>
+					<pre><code data-trim data-noescape>
+@channel_session_user
+def ws_receive(message):
+    # Load the data from the incoming WebSocket message
+    try:
+        data = json.loads(message['text'])
+	...
+	# Update the location
+    marker.location = GEOSGeometry('POINT(%s %s)' % (data...
+    marker.save()
+				    </code></pre>
+				</section>
+
+				<section>
+					<pre><code data-trim data-noescape>
+@channel_session_user
+def ws_disconnect(message):
+    logger.info('websocket_disconnect. message = %s', message)
+    # Remove connection from the group
+    Group('notifications').discard(message.reply_channel)
+				    </code></pre>
+				</section>
+
+
+				<section>
+					<pre><code data-trim data-noescape>
+# signals.py
+from channels import Group
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+def send_notification(notification):
+    Group('notifications').send({'text': json.dumps(notification)})
+
+@receiver(post_save, sender=Marker)
+def marker_post_save(sender, instance, created, **kwargs):
+    send_notification({
+        'type': 'post_save',
+        'created': created,
+        'feature': instance.geojson_feature
+    })
+				    </code></pre>
+				</section>
+
+				<section style="text-align: left;">
+					<center><h1>Fin</h1></center>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'lib/js/fullscreen-img.js' },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
