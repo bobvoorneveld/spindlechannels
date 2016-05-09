@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse_lazy
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/$', login, name='my_login'),
+    url(r'^login/$', login, {'template_name': 'admin/login.html'}, name='my_login'),
     url(r'^', include('map.urls')),
     url(
         r'^logout/$',
