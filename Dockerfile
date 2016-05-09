@@ -1,6 +1,7 @@
 FROM ubuntu:14.04
 MAINTAINER spindlechannels
 
+RUN sed -i 's/archive.ubuntu.com/nl.archive.ubuntu.com/' /etc/apt/sources.list
 RUN apt-get update
 
 RUN apt-get install -y \
