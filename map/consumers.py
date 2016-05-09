@@ -54,7 +54,8 @@ def ws_receive(message):
 
     # New Marker
     if not marker:
-        marker = Marker()
+        user = message.user if message.user.is_authenticated() else None
+        marker = Marker(user=user)
 
     # Update the location
     marker.location = GEOSGeometry('POINT(%s %s)' % (data['coordinates'][0], data['coordinates'][1]))

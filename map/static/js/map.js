@@ -73,13 +73,27 @@ $(function() {
             // Update location
             markers[feature.id].setPosition(latLng);
         } else {
+            var iconColor = 'red';
+            var title = 'new marker';
+            switch (feature['properties']['user'] % 3) {
+                case 1:
+                    iconColor = 'green';
+                    title = '+ placed by ' + feature['properties']['user'];
+                    break;
+                case 2:
+                    iconColor = 'blue';
+                    title = '+ placed by ' + feature['properties']['user'];
+                    break;
+            }
+
             // Create a new marker
             var marker = new google.maps.Marker({
                 position: latLng,
                 map: map,
                 draggable: true,
-                title: 'new marker',
-                id: feature.id
+                title: title,
+                id: feature.id,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/' + iconColor + '-dot.png',
             });
 
             // Keep track of new marker
