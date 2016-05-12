@@ -20,7 +20,7 @@
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
-
+a
 		<!-- Printing and PDF exports -->
 		<script>
 			var link = document.createElement( 'link' );
@@ -48,14 +48,6 @@
 						<small>by Bram Noordzij / <a href="http://twitter.com/randombits">@random_bits</a>, Bob Voorneveld / <a href="http://twitter.com/randombits">@BobVoorneveld</a></small>
 					</p>
 				</section>
-
-				<section data-markdown>
-				    <script type="text/template">
-						- Available as a library for Django 1.8 and 1.9
-						- Scheduled to be included in Django 1.10
-				    </script>
-				</section>
-
 				<section data-markdown>
 				    <script type="text/template">
 						...a project to make Django able to handle more than just plain HTTP requests,
@@ -81,20 +73,35 @@
 						...an ordered, first-in first-out queue with message expiry and at-most-once delivery to only one listener at a time.
 				    </script>
 				</section>
+
+				<section>
+					<pre><code class="python" data-trim data-noescape>
+INSTALLED_APPS = (
+   ...
+   'map',  # Our demo app
+)
+				    </code></pre>
+				</section>
+
+				<section>
+					<pre><code class="python" data-trim data-noescape>
+INSTALLED_APPS = (
+   ...
+   'map',  # Our demo app
+   'channels',
+)
+				    </code></pre>
+				</section>
+
 				<section data-markdown>
 				    <script type="text/template">
-						```
-						INSTALLED_APPS = (
- 						   ...
-						   'map',  # Our demo app
-						   'channels',
-						)
-						```
+						 Not so fast!
+						 ## **WSGI** becomes **ASGI**!
 				    </script>
 				</section>
 
 				<section fullscreen-img="assets/django-asgi-websockets.png" fullscreen-size="contain">
-					<h1 style="font-weight: bold; position: absolute; top: 1000%; color: rgb(0, 0, 0);">source</h1>
+					<p style="font-weight: lighter; position: fixed; bottom:0; right:0; top: 100%; color: rgb(0, 0, 0);">Jacob Kaplan-Moss</p>
 				</section>
 
 				<section fullscreen-img="assets/django-wsgi.png" fullscreen-size="contain">
@@ -123,7 +130,8 @@
 				    <script type="text/template">
 					## DEMO
 					![qrencode -s6 -o demo.png url](demo.png)
-					<a href="https://spindlechannels.herokuapp.com/login/">https://spindlechannels.herokuapp.com/login/</a>, 
+					<a href="https://spindlechannels.herokuapp.com/login/">https://spindlechannels.herokuapp.com/login/</a>
+
 					Login with **pygrunn1/13May** or **pygrunn2/13May**
 
 				    </script>
@@ -154,7 +162,8 @@ from channels.auth import channel_session_user
 # adds session user to the message
 def ws_connect(message):
 	for marker in Marker.objects.all():
-		message.reply_channel.send({'text': json.dumps({marker_info...
+		message.reply_channel.send({'text': \
+			json.dumps({marker_info...
 	Group('notifications').add(message.reply_channel)
 				    </code></pre>
 				</section>
@@ -214,8 +223,18 @@ def marker_post_save(sender, instance, created, **kwargs):
 				    </code></pre>
 				</section>
 
-				<section style="text-align: left;">
-					<center><h1>Fin</h1></center>
+				<section data-markdown>
+				    <script type="text/template">
+						Scheduled to be included in **Django 1.10**, due this summer
+
+						Available as a library for **Django 1.8** and **1.9**
+				    </script>
+				</section>
+
+				<section data-markdown>
+					##Fin
+					![qrencode -s6 -o repo.png url](repo.png)
+					<a href="https://github.com/bobvoorneveld/spindlechannels">https://github.com/bobvoorneveld/spindlechannels</a>
 				</section>
 
 			</div>
