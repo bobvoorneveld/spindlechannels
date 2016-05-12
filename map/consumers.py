@@ -6,6 +6,7 @@ from channels.auth import channel_session_user_from_http, channel_session_user
 from django.contrib.gis.geos import GEOSGeometry
 
 from map.models import Marker
+from map.signals import send_notification
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +47,9 @@ def ws_receive(message):
 
     # Check if an existing Marker is updated
     marker = None
-    if 'id' in data:
+    if 'marker' in data and 'id' in data['marker']:
         try:
-            marker = Marker.objects.get(pk=data['id'])
+            marker = Marker.objects.get(pk=data['marker']['id'])
         except Marker.DoesNotExist:
             pass
 
@@ -58,8 +59,18 @@ def ws_receive(message):
         marker = Marker(user=user)
 
     # Update the location
-    marker.location = GEOSGeometry('POINT(%s %s)' % (data['coordinates'][0], data['coordinates'][1]))
-    marker.save()
+    marker.location = GEOSGeometry('POINT(%s %s)' % (data['marker']['coordinates'][0],
+                                                     data['marker']['coordinates'][1]))
+
+    if 'event' in data:
+        if 'drag' == data['event']:
+            send_notification({
+                'type': 'update',
+                'created': True if marker.id else False,
+                'feature': marker.geojson_feature
+            })
+        else:
+            marker.save()
 
 
 @channel_session_user

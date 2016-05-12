@@ -31,7 +31,23 @@ $(function() {
         // When we're using HTTPS, use WSS too.
         var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
         socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + window.location.pathname, null, {debug: true});
-        socket.onmessage = newSocketMessage;
+        socket.onmessage = function(message) {
+            var notification = JSON.parse(message.data);
+
+            console.log('type: ' + notification.type);
+            console.log('notification: ' + notification);
+            if (notification.type == 'clear') {
+                console.log('clearing');
+                for (var markerId in markers) {
+                    if (markers.hasOwnProperty(markerId)) {
+                        markers[markerId].setMap(null);
+                        console.log('marker clearing: ' + markerId);
+                    }
+                }
+            } else {
+                handleNotification(notification);
+            }
+        }
     }
 
     /**
@@ -45,22 +61,20 @@ $(function() {
 
         // Add a listener when the user clicks the map.
         map.addListener('click', function(e) {
-            sendLocation(e.latLng);
+            sendLocation('click', e.latLng);
         });
     }
 
     /**
-     * This function will parse the incoming websocket message
+     * This function will parse the incoming notification
      *
-     * @param message (websocket message)
+     * @param notification (javascript object)
      */
-    function newSocketMessage(message) {
+    function handleNotification(notification) {
 
-        // Parse the message
-        var notification = JSON.parse(message.data);
         var feature = notification.feature;
 
-        // Are we dragging?
+        // Are we dragging or someone else?
         if (feature.id == draggingMarkerId) {
             return;
         }
@@ -105,12 +119,13 @@ $(function() {
             });
             // Add listener to end tracking of draggable marker
             marker.addListener('dragend', function() {
+                sendLocation('dragend', marker.getPosition(), marker.id);
                 draggingMarkerId = null;
             });
 
             // Send to the server the new position of the marker
             marker.addListener('drag', function() {
-                sendLocation(marker.getPosition(), marker.id);
+                sendLocation('drag', marker.getPosition(), marker.id);
             });
         }
 
@@ -146,8 +161,13 @@ $(function() {
      * @param latLng (LatLng object): Location to be sent
      * @param markerId (optional): The id of the marker
      */
-    function sendLocation(latLng, markerId) {
-        socket.send(JSON.stringify(fromLatLng(latLng, markerId)));
+    function sendLocation(event, latLng, markerId) {
+        var markerInfo = fromLatLng(latLng, markerId);
+        var info = {
+            'marker': markerInfo,
+            'event': event
+        };
+        socket.send(JSON.stringify(info));
     }
 
     function updateBounds() {
