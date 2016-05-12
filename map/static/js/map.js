@@ -156,7 +156,7 @@ $(function() {
      * @param latLng (LatLng object): Location to be sent
      * @param markerId (optional): The id of the marker
      */
-    function sendLocation(event, latLng, markerId) {
+    function _sendLocation(event, latLng, markerId) {
         var markerInfo = fromLatLng(latLng, markerId);
         var info = {
             'marker': markerInfo,
@@ -164,6 +164,7 @@ $(function() {
         };
         socket.send(JSON.stringify(info));
     }
+    var sendLocation = debounce(_sendLocation, 100);
 
     function updateBounds() {
         // Update bounds of map to fit all markers
@@ -172,5 +173,19 @@ $(function() {
             bounds.extend(markers[i].getPosition());
         }
         map.fitBounds(bounds);
+    }
+
+    function debounce(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+            };
+            if (!timeout) {
+                timeout = setTimeout(later, wait);
+                func.apply(context, args);
+            }
+        };
     }
 });
