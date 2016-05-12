@@ -33,15 +33,10 @@ $(function() {
         socket = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + window.location.pathname, null, {debug: true});
         socket.onmessage = function(message) {
             var notification = JSON.parse(message.data);
-
-            console.log('type: ' + notification.type);
-            console.log('notification: ' + notification);
             if (notification.type == 'clear') {
-                console.log('clearing');
                 for (var markerId in markers) {
                     if (markers.hasOwnProperty(markerId)) {
                         markers[markerId].setMap(null);
-                        console.log('marker clearing: ' + markerId);
                     }
                 }
             } else {
