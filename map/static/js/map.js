@@ -93,7 +93,7 @@ $(function() {
                 draggable: true,
                 title: title,
                 id: feature.id,
-                icon: 'http://maps.google.com/mapfiles/ms/icons/' + iconColor + '-dot.png',
+                icon: 'https://maps.google.com/mapfiles/ms/icons/' + iconColor + '-dot.png',
             });
 
             // Keep track of new marker
