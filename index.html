@@ -51,9 +51,22 @@
 
 				<section data-markdown>
 				    <script type="text/template">
+						- Available as a library for Django 1.8 and 1.9
+						- Scheduled to be included in Django 1.10
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
 						...a project to make Django able to handle more than just plain HTTP requests,
-						including WebSockets and HTTP2, as well as the ability to run code after a 
-						response has been sent for things like thumbnailing or background calculation.
+						including **WebSockets** and **HTTP2**, as well as the ability to run code after a
+						response has been sent..
+				    </script>
+				</section>
+
+				<section data-markdown>
+				    <script type="text/template">
+						for things like thumbnailing or background calculation and for **Bi-directional** communication...
 				    </script>
 				</section>
 
@@ -68,14 +81,6 @@
 						...an ordered, first-in first-out queue with message expiry and at-most-once delivery to only one listener at a time.
 				    </script>
 				</section>
-
-				<section data-markdown>
-				    <script type="text/template">
-						- Available as library for Django 1.8 and 1.9
-						- Included in Django 1.10
-				    </script>
-				</section>
-
 				<section data-markdown>
 				    <script type="text/template">
 						```
@@ -89,6 +94,7 @@
 				</section>
 
 				<section fullscreen-img="assets/django-asgi-websockets.png" fullscreen-size="contain">
+					<h1>source</h1>
 				</section>
 
 				<section fullscreen-img="assets/django-wsgi.png" fullscreen-size="contain">
@@ -116,7 +122,9 @@
 				<section data-markdown>
 				    <script type="text/template">
 					## DEMO
-					<a href="https://github.com/bobvoorneveld/spindlechannels">https://github.com/bobvoorneveld/spindlechannels</a>,
+					<a href="https://spindlechannels.herokuapp.com/login/">https://spindlechannels.herokuapp.com/login/</a>
+					![qrencode -s6 -o demo.png url](demo.png)
+					Login with pygrunn1 or pygrunn2
 				    </script>
 				</section>
 
