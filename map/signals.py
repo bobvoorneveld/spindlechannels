@@ -17,9 +17,9 @@ def send_notification(notification):
 
 
 @receiver(post_save, sender=Marker)
-def marker_post_save(sender, **kwargs):
+def marker_post_save(sender, instance, created, **kwargs):
     send_notification({
         'type': 'post_save',
-        'created': kwargs['created'],
-        'feature': kwargs['instance'].geojson_feature
+        'created': created,
+        'feature': instance.geojson_feature
     })

@@ -3,13 +3,8 @@ from spindlechannels.settings.base import *  # noqa
 DEBUG = boolean(os.environ.get('DEBUG', 1))
 TEMPLATES[0]['OPTIONS']['debug'] = boolean(os.environ.get('TEMPLATE_DEBUG', DEBUG))
 
-if DEBUG:
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "asgiref.inmemory.ChannelLayer",
-            "ROUTING": "spindlechannels.routing.channel_routing",
-        },
-    }
+# if DEBUG:
+#     CHANNEL_LAYERS['default']['BACKEND'] = 'asgiref.inmemory.ChannelLayer'
 
 ALLOWED_HOSTS = []
 

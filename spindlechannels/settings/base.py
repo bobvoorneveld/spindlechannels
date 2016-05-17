@@ -136,13 +136,12 @@ ADMINS = (
 
 REDIS_ENV = os.environ.get('REDIS_PROVIDER_ENV', 'REDIS_DEV_URL')
 REDIS_URL = os.environ.get(REDIS_ENV, 'redis://redis:6379')
-REDIS = urlparse(REDIS_URL)
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(REDIS.hostname, REDIS.port)],
+            "hosts": [REDIS_URL],
         },
         "ROUTING": "spindlechannels.routing.channel_routing",
     },
