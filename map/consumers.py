@@ -20,7 +20,7 @@ def ws_connect(message):
         message.reply_channel.send({
             'text':
                 json.dumps({
-                    'type': 'post_save',
+                    'type': 'loaded',
                     'created': False,
                     'feature': marker.geojson_feature
                 })
