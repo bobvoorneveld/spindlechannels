@@ -3,7 +3,7 @@ from spindlechannels.settings.base import *  # noqa
 DEBUG = boolean(os.environ.get('DEBUG', 0))
 TEMPLATES[0]['OPTIONS']['debug'] = boolean(os.environ.get('TEMPLATE_DEBUG', DEBUG))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Use the cached template loader so template is compiled once and read from
 # memory instead of reading from disk on each load.

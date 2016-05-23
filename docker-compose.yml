@@ -15,7 +15,7 @@ web:
     - .:/home/docker/spindlechannels
   ports:
     # ext:int port.
-    - "8005:8000"
+    - "8001:8000"
   links:
     # Define all containers for easy running of development setup.
     - db
